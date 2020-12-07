@@ -1,7 +1,6 @@
 (ns day1
   (:require [clojure.edn :as edn]
-            [clojure.string :as str]
-            [clojure.core.reducers :as r]))
+            [clojure.string :as str]))
 
 (def input
   (map edn/read-string
@@ -10,7 +9,7 @@
            str/split-lines)))
 
 (defn part1 []
-  (r/fold + input))
+  (reduce + input))
 
 (defn part2 []
   (loop [seen #{}
