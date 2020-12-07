@@ -73,13 +73,11 @@
     ;(println seconds completed steps in-progress)
     (if (or (= (count completed) (count all-steps)))
       seconds
-      (let* [
+      (let [{just-completed true, new-in-progress false}
              ; just completed steps are ones whose completion time is now
-             just-completed (filter (fn [[_k v]] (= v seconds)) in-progress)
+             (group-by (fn [[_k v]] (= v seconds)) in-progress)
              ; add these to the new list of completed steps
              new-completed (set/union completed (set (map first just-completed)))
-             ; remove completed steps from in-progress
-             new-in-progress (filter (fn [[_k v]] (not= v seconds)) in-progress)
              ; given the current completed steps and available workers, find steps we can start
              ready-to-start (->> (get-ready-steps steps new-completed)
                                  ; available workers is total works minus the number of steps being worked on

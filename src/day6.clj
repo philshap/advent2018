@@ -41,9 +41,9 @@
 ;; use frequencies to find largest owner
 
 (defn part1 []
-  (let* [coords (map make-point input)
-         sort-x (sort (map :x coords))
-         sort-y (sort (map :y coords))]
+  (let [coords (map make-point input)
+        sort-x (sort (map :x coords))
+        sort-y (sort (map :y coords))]
     (->> (for [x (range (first sort-x) (inc (last sort-x)))
                y (range (first sort-y) (inc (last sort-y)))]
            ; generate a list of all points in the grid
@@ -63,9 +63,9 @@
        (reduce +)))
 
 (defn part2 []
-  (let* [coords (map make-point input)
-         sort-x (sort (map :x coords))
-         sort-y (sort (map :y coords))]
+  (let [coords (map make-point input)
+        sort-x (sort (map :x coords))
+        sort-y (sort (map :y coords))]
     (->> (for [x (range (first sort-x) (inc (last sort-x)))
                y (range (first sort-y) (inc (last sort-y)))]
            {:x x :y y})

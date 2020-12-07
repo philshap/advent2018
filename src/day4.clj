@@ -13,9 +13,9 @@
   ;"[1518-02-25 00:29] wakes up"
 
 (defn parse-guard-line [line]
-  (let* [split (str/split line #"[\[ :\]]")
-         min (Integer/parseInt (nth split 3))
-         id (nth split 6)]
+  (let [split (str/split line #"[\[ :\]]")
+        min (Integer/parseInt (nth split 3))
+        id (nth split 6)]
     {:min min :id id}))
 
 (def parsed (->> input
@@ -38,23 +38,23 @@
       guards)))
 
 (defn part1 []
-  (let* [sleepy
-         (->> parsed
-              collect-guard-data
-              ; find the guard with the most minutes asleep
-              (sort (fn [x y] (> (count (fnext x)) (count (fnext y)))))
-              first
-              )
-         sleep-min
-         (->> sleepy
-              ; get minutes
-              fnext
-              frequencies
-              (sort-by last)
-              ; return minute of most frequent item
-              last
-              first)
-         ]
+  (let [sleepy
+        (->> parsed
+             collect-guard-data
+             ; find the guard with the most minutes asleep
+             (sort (fn [x y] (> (count (fnext x)) (count (fnext y)))))
+             first
+             )
+        sleep-min
+        (->> sleepy
+             ; get minutes
+             fnext
+             frequencies
+             (sort-by last)
+             ; return minute of most frequent item
+             last
+             first)
+        ]
     (* (edn/read-string (subs (first sleepy) 1))
        sleep-min)))
 

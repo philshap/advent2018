@@ -34,15 +34,15 @@
       count))
 
 (defn part2 []
-  (let* [all-claims (->> input (map parse-entry))
-         ;; create a set of all coordinates that only belong to a single claim
-         all-ones (->> all-claims
-                       (map expand-claim)
-                       (apply concat)
-                       frequencies
-                       (filter (fn [[_k v]] (= v 1)))
-                       keys
-                       set)]
+  (let [all-claims (->> input (map parse-entry))
+        ;; create a set of all coordinates that only belong to a single claim
+        all-ones (->> all-claims
+                      (map expand-claim)
+                      (apply concat)
+                      frequencies
+                      (filter (fn [[_k v]] (= v 1)))
+                      keys
+                      set)]
     (->> all-claims
          (filter (fn [claim]
                    (empty? (set/difference (set (expand-claim claim)) all-ones))))
