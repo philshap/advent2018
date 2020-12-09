@@ -24,8 +24,9 @@
                (if (values 2) (inc twos) twos)
                (if (values 3) (inc threes) threes))))))
 
-(defn expand-word [word]
+(defn expand-word
   "given a word, return all words made by removing one character at any position"
+  [word]
   (let [chars (seq word)]
     (map (partial apply str)
      (map #(concat (take % chars) (drop (inc %) chars))
@@ -39,5 +40,5 @@
        (filter (fn [[_k v]] (= v 3)))
        ffirst))
 
-(println "part 1: " (part1))
-(println "part 2: " (part2))
+;(println "part 1: " (part1))
+;(println "part 2: " (part2))

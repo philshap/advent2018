@@ -31,9 +31,9 @@
              ;; the owner is the one with the smallest distance
              (sort-by :distance))]
     ;; a point can only have one owner
-    (if (not= ((first maybe-owner) :distance)
-              ((second maybe-owner) :distance))
-      (dissoc (first maybe-owner) :distance))))
+    (and (not= ((first maybe-owner) :distance)
+               ((second maybe-owner) :distance))
+         (dissoc (first maybe-owner) :distance))))
 
 ;; convert input to list of coords
 ;; find grid min/max x, y
@@ -73,5 +73,5 @@
          (filter #(< % 10000))
          count)))
 
-(println "part 1: " (part1))
-(println "part 2: " (part2))
+;(println "part 1: " (part1))
+;(println "part 2: " (part2))

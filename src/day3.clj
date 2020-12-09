@@ -8,17 +8,18 @@
       slurp
       str/split-lines))
 
-(defstruct claim :id :left :top :w :h)
+(defstruct claim-type :id :left :top :w :h)
 
 ;; "#14 @ 341,283: 20x12" => (14 341 283 20 12)
 (defn parse-entry [entry]
-  (apply (partial struct claim)
+  (apply (partial struct claim-type)
          (map
            edn/read-string
            (rest (re-find #"#(\d+) @ (\d+),(\d+): (\d+)x(\d+)" entry)))))
 
-(defn expand-claim [claim]
+(defn expand-claim
   "given a claim, return all the points inside the claim"
+  [claim]
   (for [i (range (claim :w))
         j (range (claim :h))]
     [(+ (claim :left) i) (+ (claim :top) j)]))
@@ -49,5 +50,5 @@
          first
          :id)))
 
-(println "part 1: " (part1))
-(println "part 2: " (part2))
+;(println "part 1: " (part1))
+;(println "part 2: " (part2))

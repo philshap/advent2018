@@ -45,5 +45,5 @@
 (defn part2 []
   (first (sum-index-metadata input)))
 
-(println "part 1: " (part1))
-(println "part 2: " (part2))
+;(println "part 1: " (part1))
+;(println "part 2: " (part2))

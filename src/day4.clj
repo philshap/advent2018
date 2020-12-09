@@ -21,8 +21,9 @@
 (def parsed (->> input
                  (map parse-guard-line)))
 
-(defn collect-guard-data [parsed]
+(defn collect-guard-data
   "return map of guard => list of minutes asleep"
+  [parsed]
   (loop [guards {}
          guard nil
          sleep 0
@@ -74,5 +75,5 @@
     (* (edn/read-string (subs (first sleepy) 1))
        (first (last sleepy)))))
 
-(println "part 1: " (part1))
-(println "part 2: " (part2))
+;(println "part 1: " (part1))
+;(println "part 2: " (part2))

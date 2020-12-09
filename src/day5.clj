@@ -38,5 +38,5 @@
 
 ;; very slow! it works but there should be a faster way to do it
 
-(println "part 1: " (part1))
-(println "part 2: " (part2))
+;(println "part 1: " (part1))
+;(println "part 2: " (part2))

@@ -53,9 +53,10 @@
 (defn step-duration [step-name]
   (+ 60 (inc (- (int (first step-name)) (int \A)))))
 
-(defn get-ready-steps [steps complete]
+(defn get-ready-steps
   "Given a collection of steps with dependents and a set of complete steps,
    return ready steps with duration per step"
+  [steps complete]
   (->> steps
        (filter (fn [[_k v]] (clojure.set/subset? v complete)))
        (map (fn [[k _v]] [k (step-duration k)]))))
@@ -71,7 +72,7 @@
          ; list of (step, time left) pairs
          in-progress ()]
     ;(println seconds completed steps in-progress)
-    (if (or (= (count completed) (count all-steps)))
+    (if (= (count completed) (count all-steps))
       seconds
       (let [{just-completed true, new-in-progress false}
              ; just completed steps are ones whose completion time is now
@@ -96,5 +97,5 @@
        collect-steps
        (time-steps 5)))
 
-(println "part 1: " (part1))
-(println "part 2: " (part2))
+;(println "part 1: " (part1))
+;(println "part 2: " (part2))
