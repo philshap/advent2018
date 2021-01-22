@@ -42,9 +42,7 @@
         all-points (->> points (map #(subvec % 0 2)) set)]
     (->> (for [y (range y-min (inc y-max))
                x (range x-min (inc x-max))]
-           (if (contains? all-points [x y])
-             \#
-             \.))
+           (if (contains? all-points [x y]) "##"  "  "))
          (partition (- (inc x-max) x-min))
          (map (partial apply str)))))
 
@@ -54,7 +52,7 @@
       find-message
       first
       print-message
-      (#(doseq [line %] (println line)))))
+      (->> (map println) dorun)))
 
 ;; 10274
 (defn part2 []
