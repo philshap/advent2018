@@ -6,19 +6,19 @@ import java.util.stream.Collectors;
 
 public class Day13 {
     enum Direction {
-        UP('^', -1, 0) {
+        UP('^', 0, -1) {
             Direction left() {return LEFT;}
             Direction right() {return RIGHT;}
         },
-        DOWN('v', 1, 0) {
+        DOWN('v', 0, 1) {
             Direction left() {return RIGHT;}
             Direction right() {return LEFT;}
         },
-        LEFT('<', 0, -1) {
+        LEFT('<', -1, 0) {
             Direction left() {return DOWN;}
             Direction right() {return UP;}
         },
-        RIGHT('>', 0, 1) {
+        RIGHT('>', 1, 0) {
             Direction left() {return UP;}
             Direction right() {return DOWN;}
         };
@@ -34,7 +34,9 @@ public class Day13 {
         }
 
         abstract Direction left();
+
         abstract Direction right();
+
         boolean isVert() {
             return this == UP || this == DOWN;
         }
@@ -48,7 +50,6 @@ public class Day13 {
         int x;
         int y;
         Direction dir;
-        boolean isCrashed;
         final Track track;
         int rep;
 
@@ -77,63 +78,43 @@ public class Day13 {
             };
         }
 
-        boolean isActive() {
-            return !isCrashed;
-        }
-
         int toLoc() {
-            return x * track.track.length + y;
-        }
-
-        public void crash() {
-            isCrashed = true;
+            return y * track.track.length + x;
         }
 
         @Override
         public String toString() {
-            return "Cart{" + "x=" + x + ", y=" + y + ", direction=" + dir + ", isCrashed=" + isCrashed + '}';
+            return "Cart{" + "x=" + x + ", y=" + y + ", direction=" + dir + ", rep=" + rep + '}';
         }
     }
 
     static class Track {
         final char[][] track;
-        final List<Cart> carts;
-        boolean crashYet;
+        final List<Cart> carts = new ArrayList<>();
 
         Track(Path path) throws IOException {
             var lines = Files.readAllLines(path);
-            track = new char[lines.size()][lines.get(0).length()];
-            for (int y = 0; y < lines.size(); y++) {
-                for (int x = 0; x < lines.get(y).length(); x++) {
-                    track[y][x] = lines.get(y).charAt(x);
-                }
-            }
-            carts = findCarts();
-        }
-
-        List<Cart> findCarts() {
-            List<Cart> carts = new ArrayList<>();
-            for (int y = 0; y < track.length; y++) {
-                for (int x = 0; x < track[y].length; x++) {
+            var maxLineLength = lines.stream().map(String::length).max(Integer::compareTo).orElse(0);
+            int height = lines.size();
+            track = new char[height][maxLineLength];
+            for (int y = 0; y < height; y++) {
+                var line = lines.get(y);
+                for (int x = 0; x < line.length(); x++) {
+                    char c = line.charAt(x);
+                    track[y][x] = c;
                     int xx = x;
                     int yy = y;
-                    Direction.ofChar(track[y][x]).ifPresent(d -> carts.add(new Cart(xx, yy, d, this)));
+                    Direction.ofChar(c).ifPresent(d -> carts.add(new Cart(xx, yy, d, this)));
                 }
             }
-            return carts;
         }
 
         void moveCarts() {
             sortCarts();
-            System.out.println(carts);
-            for (Cart cart : activeCarts()) {
+            for (Cart cart : List.copyOf(carts)) {
                 cart.move();
                 cart.turn();
-                markCrashed();
-                if (cart.isCrashed && !crashYet) {
-                    System.out.println("first crash at " + cart);
-                    crashYet = true;
-                }
+                removeCrashed();
             }
         }
 
@@ -141,25 +122,27 @@ public class Day13 {
             carts.sort(Comparator.comparingInt(c -> ((Cart) c).y).thenComparingInt(c -> ((Cart) c).x));
         }
 
-        void markCrashed() {
-            Map<Integer, List<Cart>> frequencies = activeCarts().stream().collect(Collectors.groupingBy(Cart::toLoc));
-            frequencies.values().forEach(carts -> {
-                if (carts.size() != 1) {
-                    carts.forEach(Cart::crash);
+        void removeCrashed() {
+            Map<Integer, List<Cart>> frequencies = carts.stream().collect(Collectors.groupingBy(Cart::toLoc));
+            frequencies.values().forEach(crashed -> {
+                if (crashed.size() != 1) {
+                    System.out.format("crash at (%d,%d)\n", crashed.get(0).x, crashed.get(0).y);
+                    carts.removeAll(crashed);
                 }
             });
         }
-
-        List<Cart> activeCarts() {
-            return carts.stream().filter(Cart::isActive).collect(Collectors.toList());
-        }
     }
 
+    /*
+     * crash at (79,128)
+     * ...
+     * Cart{x=3, y=42, direction=DOWN, rep=9687}
+     */
     public static void main(String[] args) throws IOException {
-        var track = new Track(Path.of("src/day13-input-small.txt"));
-        while (track.activeCarts().size() > 1) {
+        var track = new Track(Path.of("src/day13-input.txt"));
+        while (track.carts.size() > 1) {
             track.moveCarts();
         }
-        System.out.println(track.carts);
+        System.out.println(track.carts.get(0));
     }
 }
