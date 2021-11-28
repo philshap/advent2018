@@ -1,18 +1,20 @@
-(ns main)
-(require 'day1
-         'day2
-         'day3
-         'day3
-         'day4
-         'day5
-         'day6
-         'day7
-         'day8)
+(ns main
+  (:require [clojure.java.io :as io]))
 
-(defn run []
-  (->> (range 1 9)
-       (map #(do
-               (println "day" %)
-               (println "part 1:" ((eval (symbol (str "day" % "/part1")))))
-               (println "part 2:" ((eval (symbol (str "day" % "/part2"))))))))
-  )
+(defn -main [& _args]
+  (->> (io/file "./src")
+       file-seq
+       (map #(re-find #"^day(\d+).clj$" (.getName %)))
+       (filter some?)
+       (map last)
+       (map read-string)
+       sort
+       (map (fn [day]
+              (require (symbol (str "day" day)))
+              (doall
+                (for [part [1 2]]
+                  (-> (symbol (str "day" day "/part" part))
+                      (doto (print ": "))
+                      (#(time ((eval %)))))))))
+       doall)
+  "done")
