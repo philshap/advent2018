@@ -119,10 +119,10 @@
              keys
              set)]
     (->> carts
-        (map #(if (contains? to-remove (:pos %))
-                (assoc % :crashed true)
-                %))
-        vec)))
+         (map #(if (contains? to-remove (:pos %))
+                 (assoc % :crashed true)
+                 %))
+         vec)))
 
 (defn move-cart-2 [cart track]
   (if (:crashed cart)
@@ -140,7 +140,7 @@
     (loop [carts carts
            index 0]
       (if (= (count-active-carts carts) 1)
-        (move-cart (->> carts (remove :crashed) first) track)
+        (->> carts (remove :crashed) first)
         (if (= index (count carts))
           (recur (vec (sort compare-cart carts)) 0)
           (recur (carts-collide-2 (update carts index move-cart-2 track))
@@ -152,7 +152,7 @@
 (defn part2 []
   (run-carts-2))
 
-;(comment
-(println (part1))
-(println (part2))
-;)
+(comment
+  (println (part1))
+  (println (part2))
+  )
