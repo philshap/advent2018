@@ -18,11 +18,11 @@
 (def corner1 \\)
 (def corner2 \/)
 
-(def cart->delta {right [1 0] left [-1 0] down [0 1] up [-0 -1]})
+(def cart->delta {right [1 0] left [-1 0] down [0 1] up [0 -1]})
 (def corner1->cart {right down, left up, up left, down right})
 (def corner2->cart {right up, left down, up right, down left})
-(def dir->left {right up, up left, left down, down right})
-(def dir->right {right down, down left, left up, up right})
+(def dir->left {right up, left down, up left, down right})
+(def dir->right {right down, left up, up right, down left})
 (def dir->edge {right \-, left \-, up \|, down \|})
 
 (def edges #{\- \|})
@@ -112,6 +112,7 @@
 (defn carts-collide-2 [carts]
   (let [to-remove
         (->> carts
+             (remove :crashed)
              (map :pos)
              frequencies
              (filter #(> (val %) 1))
