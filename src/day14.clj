@@ -39,14 +39,17 @@
       (if (and (> (count recipes) (count target))
                (= (subvec recipes (- (count recipes) (count target))) target))
         (- (count recipes) (count target))
-        (let [recipe1 (nth recipes elf1)
-              recipe2 (nth recipes elf2)
-              new-recipes (into recipes (make-recipes (+ recipe1 recipe2)))]
-          (recur (mod (+ elf1 recipe1 1) (count new-recipes))
-                 (mod (+ elf2 recipe2 1) (count new-recipes))
-                 new-recipes))))))
+        (if (and (> (count recipes) (count target))
+                 (= (subvec recipes (- (dec (count recipes)) (count target))) target))
+          (- (dec (count recipes)) (count target))
+          (let [recipe1 (nth recipes elf1)
+                recipe2 (nth recipes elf2)
+                new-recipes (into recipes (make-recipes (+ recipe1 recipe2)))]
+            (recur (mod (+ elf1 recipe1 1) (count new-recipes))
+                   (mod (+ elf2 recipe2 1) (count new-recipes))
+                   new-recipes)))))))
 
 ;(comment
 (println "part 1: " (part1))
-;(println "part 2: " (part2))
+(println "part 2: " (part2))
 ;)
